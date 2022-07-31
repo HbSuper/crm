@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import com.huike.clues.domain.dto.ImportResultDTO;
 import com.huike.clues.strategy.Rule;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +44,7 @@ import com.huike.common.utils.bean.BeanUtils;
  * 
  * @date 2021-04-02
  */
+@Slf4j
 @Service
 public class TbClueServiceImpl implements ITbClueService {
 
@@ -294,11 +296,9 @@ public class TbClueServiceImpl implements ITbClueService {
 		// 统计当前分配人所有线索
 		int asignRecords = assignRecordMapper.countAssignCluesByUser(userId);
 		if (asignRecords >= rulePool.getMaxNunmber()) {
-			long remainder = rulePool.getMaxNunmber() - asignRecords;
-			if (remainder<0){
-				remainder=0;
-			}
-			throw new CustomException("捞取失败！最大保有量(" + rulePool.getMaxNunmber() + ")，剩余可以捞取"+(remainder)+"条线索");
+			long abs = Math.abs(rulePool.getMaxNunmber() - asignRecords);
+			log.info(abs+"当前的绝对值为");
+			throw new CustomException("捞取失败！最大保有量(" + rulePool.getMaxNunmber() + ")，剩余可以捞取"+(Math.abs(rulePool.getMaxNunmber() - asignRecords))+"条线索");
 		}
 		for (int i = 0; i < clueIds.length; i++) {
 			Long clueId = clueIds[i];
