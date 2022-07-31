@@ -1,9 +1,6 @@
 package com.huike.clues.service.impl;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.huike.common.utils.uuid.UUIDUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,13 +49,34 @@ public class TbActivityServiceImpl implements ITbActivityService {
     }
 
     /**
+     * 查询当前活动管理列表
+     * @param tbActivity 活动管理
+     * @return 当前活动管理集合
+     */
+    @Override
+    public List<TbActivity> selectCurrentTbActivityList(TbActivity tbActivity) {
+        List<TbActivity> tbActivities = tbActivityMapper.selectTbActivityList(tbActivity);
+        List<TbActivity> tbActivitiesresult = new ArrayList<>();
+        for (TbActivity activity : tbActivities) {
+            Date date = new Date();
+            Date beginTime = activity.getBeginTime();
+            Date endTime = activity.getEndTime();
+            if (date.compareTo(beginTime)>=0 && date.compareTo(endTime)==-1){
+                tbActivitiesresult.add(activity);
+            }
+        }
+
+        return tbActivitiesresult ;
+    }
+    /**
      * 查询活动管理列表
-     * 
+     *
      * @param tbActivity 活动管理
      * @return 活动管理
      */
     @Override
     public List<TbActivity> selectTbActivityList(TbActivity tbActivity) {
+
         return tbActivityMapper.selectTbActivityList(tbActivity);
     }
 

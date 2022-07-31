@@ -60,7 +60,7 @@ public class TbActivityController extends BaseController {
         TbActivity tbActivity =new TbActivity();
         tbActivity.setChannel(channel);
         tbActivity.setStatus("2");
-        return AjaxResult.success(tbActivityService.selectTbActivityList(tbActivity));
+        return AjaxResult.success(tbActivityService.selectCurrentTbActivityList(tbActivity));
     }
 
     /**

@@ -32,6 +32,12 @@ public interface ITbActivityService
     public List<TbActivity> selectTbActivityList(TbActivity tbActivity);
 
     /**
+     * 查询当前活动管理列表
+     * @param tbActivity 活动管理
+     * @return 当前活动管理集合
+     */
+    List<TbActivity> selectCurrentTbActivityList(TbActivity tbActivity);
+    /**
      * 新增活动管理
      * 
      * @param tbActivity 活动管理
