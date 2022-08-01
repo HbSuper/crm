@@ -90,7 +90,7 @@ public class TbActivityServiceImpl implements ITbActivityService {
     @Transactional
     public int insertTbActivity(TbActivity tbActivity){
         tbActivity.setCreateTime(DateUtils.getNowDate());
-        tbActivity.setCode(getCode());
+        tbActivity.setCode(UUIDUtils.getUUID());
         tbActivity.setStatus("2");
         int rows= tbActivityMapper.insertTbActivity(tbActivity);
         loadAllActivityCode();
@@ -160,14 +160,14 @@ public class TbActivityServiceImpl implements ITbActivityService {
      * 生成活动编号
      * @return
      */
-    private String getCode(){
-        //随机8位编码
-        String code= StringUtils.getRandom(8);
-        //店铺校验
-        Set<String> codeSets =  redisCache.getCacheSet(Constants.ACT_CODE_KEY);
-        if(codeSets.contains(code)){
-            return getCode();
-        }
-        return code;
-    }
+    // private String getCode(){
+    //     //随机8位编码
+    //     String code= StringUtils.getRandom(8);
+    //     //店铺校验
+    //     Set<String> codeSets =  redisCache.getCacheSet(Constants.ACT_CODE_KEY);
+    //     if(codeSets.contains(code)){
+    //         return getCode();
+    //     }
+    //     return code;
+    // }
 }

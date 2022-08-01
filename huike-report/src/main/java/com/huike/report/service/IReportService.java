@@ -107,5 +107,9 @@ public interface IReportService {
      */
     IndexBaseInfoVO getBaseInfo(String beginCreateTime, String endCreateTime);
 
-
+    /**
+     * 首页--当前用户当天基础数据统计
+     * @return
+     */
+    IndexTodayInfoVO getTodayInfo();
 }
