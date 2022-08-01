@@ -3,6 +3,7 @@ package com.huike.report.mapper;
 import java.util.List;
 import java.util.Map;
 
+import com.huike.report.domain.vo.SubjectStatisticsVO;
 import org.apache.ibatis.annotations.Param;
 
 import com.huike.clues.domain.vo.IndexStatisticsVo;
@@ -108,6 +109,14 @@ public interface ReportMapper {
      * @return 待分配商机数目
      */
     Integer getToallocatedBusinessNum(@Param("startTime") String beginCreateTime,@Param("endTime") String endCreateTime);
+
+    /**
+     * 统计分析-客户统计-学科客户分布饼图
+     * @param beginCreateTime 开始时间
+     * @param endCreateTime 结束时间
+     * @return
+     */
+    List<SubjectStatisticsVO> getsubjectStatistics(@Param("startTime")String beginCreateTime, @Param("endTime")String endCreateTime);
 
     /**=========================================今日简报========================================*/
 

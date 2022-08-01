@@ -128,4 +128,12 @@ public interface IReportService {
      * @return
      */
     IndexTodoInfoVO getTodoInfo(String beginCreateTime, String endCreateTime);
+
+    /**
+     * 统计分析-客户统计-学科客户分布饼图
+     * @param beginCreateTime 开始时间
+     * @param endCreateTime 结束时间
+     * @return
+     */
+    List<SubjectStatisticsVO> getsubjectStatistics(String beginCreateTime, String endCreateTime);
 }

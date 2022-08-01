@@ -165,4 +165,15 @@ public class ReportController extends BaseController {
         return AjaxResult.success(reportService.getVulnerabilityMap(beginCreateTime,endTime));
     }
 
+    /**
+     * 统计分析-客户统计-学科客户分布饼图
+     * @param beginCreateTime 开始时间
+     * @param endCreateTime 结束时间
+     * @return
+     */
+    @GetMapping("/subjectStatistics/{beginCreateTime}/{endCreateTime}")
+    public AjaxResult subjectStatistics(@PathVariable("beginCreateTime") String beginCreateTime,
+                                        @PathVariable("endCreateTime") String endCreateTime){
+        return AjaxResult.success(reportService.getsubjectStatistics(beginCreateTime,endCreateTime));
+    }
 }

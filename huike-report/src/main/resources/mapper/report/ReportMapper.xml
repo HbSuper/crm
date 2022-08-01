@@ -100,6 +100,11 @@ WHERE id in (Select DISTINCT (assign_id) FROM tb_assign_record)
             AND #{endTime}
           AND `status` in ('3','4')
     </select>
+    <select id="getsubjectStatistics" resultType="com.huike.report.domain.vo.SubjectStatisticsVO">
+        SELECT subject,COUNT(id) AS num FROM tb_contract
+WHERE status = 4 AND DATE_FORMAT(`create_time`, '%Y-%m-%d') BETWEEN #{startTime}
+    AND #{endTime} GROUP BY subject;
+    </select>
 
 
 </mapper>

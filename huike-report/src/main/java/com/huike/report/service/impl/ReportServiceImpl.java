@@ -434,4 +434,16 @@ public class ReportServiceImpl implements IReportService {
         return indexTodoInfoVO;
     }
 
+
+    /**
+     * 统计分析-客户统计-学科客户分布饼图
+     * @param beginCreateTime 开始时间
+     * @param endCreateTime 结束时间
+     * @return
+     */
+    public List<SubjectStatisticsVO> getsubjectStatistics(String beginCreateTime, String endCreateTime){
+      return   reportMpper.getsubjectStatistics(beginCreateTime,endCreateTime);
+
+    }
+
 }
