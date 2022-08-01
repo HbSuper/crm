@@ -352,7 +352,6 @@ public class TbClue extends BaseEntity {
 
     public enum StatusType{
 
-
         UNFOLLOWED("待跟进","1"),
         FOLLOWING("跟进中","2"),
         RECOVERY("回收","3"),

@@ -20,8 +20,8 @@ public class IndexController {
 
     /**
      * 首页--基础数据统计
-     * @param beginCreateTime
-     * @param endCreateTime
+     * @param beginCreateTime 开始时间
+     * @param endCreateTime 结束时间
      * @return
      */
     @GetMapping("/getBaseInfo")
@@ -34,8 +34,20 @@ public class IndexController {
      * 首页--当前用户当天基础数据统计
      * @return
      */
-    @GetMapping("getTodayInfo")
-    public AjaxResult getTodoInfo(){
+    @GetMapping("/getTodayInfo")
+    public AjaxResult getTodayInfo(){
         return AjaxResult.success(reportService.getTodayInfo());
     }
+
+    /**
+     * 首页--待办数据统计接口
+     * @param beginCreateTime 开始时间
+     * @param endCreateTime 结束时间
+     * @return
+     */
+    @GetMapping("/getTodoInfo")
+    public AjaxResult  getTodoInfo(@RequestParam("beginCreateTime")String beginCreateTime,@RequestParam("endCreateTime") String endCreateTime){
+        return AjaxResult.success(reportService.getTodoInfo(beginCreateTime,endCreateTime));
+    }
+
 }

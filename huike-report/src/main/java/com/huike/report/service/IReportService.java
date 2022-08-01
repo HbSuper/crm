@@ -3,6 +3,7 @@ package com.huike.report.service;
 import java.util.List;
 import java.util.Map;
 
+import com.huike.common.core.domain.AjaxResult;
 import com.huike.report.domain.vo.*;
 import org.apache.ibatis.annotations.Param;
 
@@ -112,4 +113,19 @@ public interface IReportService {
      * @return
      */
     IndexTodayInfoVO getTodayInfo();
+
+    /**
+     * 线索转化率漏斗图
+     * @param beginCreateTime 开始时间
+     * @param endTime 结束时间
+     * @return
+     */
+    VulnerabilityMapVo getVulnerabilityMap(String beginCreateTime, String endTime);
+    /**
+     * 首页--待办数据统计接口
+     * @param beginCreateTime 开始时间
+     * @param endCreateTime 结束时间
+     * @return
+     */
+    IndexTodoInfoVO getTodoInfo(String beginCreateTime, String endCreateTime);
 }

@@ -377,6 +377,7 @@ public class ReportServiceImpl implements IReportService {
      *
      * @return
      */
+    @Override
     public IndexTodayInfoVO getTodayInfo() {
         // 1）构建一个空的结果集对象
         IndexTodayInfoVO result = new IndexTodayInfoVO();
@@ -402,4 +403,35 @@ public class ReportServiceImpl implements IReportService {
         // 4 返回结果集对象
         return result;
     }
+
+    /**
+     * 线索转化率漏斗图
+     *
+     * @param beginCreateTime 开始时间
+     * @param
+     * @return
+     */
+    public VulnerabilityMapVo getVulnerabilityMap(String beginCreateTime, String endCreateTime) {
+        return null;
+    }
+
+    /**
+     * @param beginCreateTime 开始时间
+     * @param endCreateTime   结束创建时间
+     * @return
+     */
+    public IndexTodoInfoVO getTodoInfo(String beginCreateTime, String endCreateTime) {
+        Integer tofollowedCluesNum = reportMpper.getTofollowedCluesNum(beginCreateTime, endCreateTime);
+        Integer tofollowedBusinessNum = reportMpper.getTofollowedBusinessNum(beginCreateTime, endCreateTime);
+        Integer toallocatedCluesNum = reportMpper.getToallocatedCluesNum(beginCreateTime, endCreateTime);
+        Integer toallocatedBusinessNum = reportMpper.getToallocatedBusinessNum(beginCreateTime, endCreateTime);
+
+        IndexTodoInfoVO indexTodoInfoVO = new IndexTodoInfoVO();
+        indexTodoInfoVO.setTofollowedCluesNum(tofollowedCluesNum);
+        indexTodoInfoVO.setTofollowedBusinessNum(tofollowedBusinessNum);
+        indexTodoInfoVO.setToallocatedCluesNum(toallocatedCluesNum);
+        indexTodoInfoVO.setToallocatedBusinessNum(toallocatedBusinessNum);
+        return indexTodoInfoVO;
+    }
+
 }
