@@ -245,6 +245,7 @@
         </trim>
     </insert>
 
+
     <update id="updateTbClue" parameterType="TbClue">
         update tb_clue
         <trim prefix="SET" suffixOverrides=",">

@@ -1,9 +1,11 @@
 package com.huike.clues.domain.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 
 import java.util.Date;
 
+@Data
 public class ClueTrackRecordVo {
 
     /** 线索id */

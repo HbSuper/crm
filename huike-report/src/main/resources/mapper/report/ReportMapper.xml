@@ -3,9 +3,19 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.huike.report.mapper.ReportMapper">
+    <resultMap id="getStudentRM" type="com.huike.report.domain.vo.BusinessChangeStatisticsVO">
+        <result property="create_by" column="create_by"/>
+        <result property="num" column="num"/>
+        <result property="radio" column="radio"/>
+    </resultMap>
+    <resultMap id="getSalesStatisticsRM" type="com.huike.report.domain.vo.SalesStatisticsVO">
+        <result property="create_by" column="create_by"/>
+        <result property="num" column="num"/>
+        <result property="radio" column="radio"/>
+    </resultMap>
 
     <select id="getCluesNum" resultType="Integer">
-        SELECT COUNT(DISTINCT (id)) AS cluesNum
+        SELECT COUNT(DISTINCT id) AS cluesNum
         FROM `tb_clue`
         WHERE id IN (SELECT assign_id
                      FROM `tb_assign_record`
@@ -56,7 +66,7 @@
                 and DATE_FORMAT(create_time, '%Y-%m-%d')  <![CDATA[>=]]> #{startTime}
             </if>
             <if test="endTime != null and endTime !=''">
-                and  DATE_FORMAT(end_time, '%Y-%m-%d') <![CDATA[<=]]> #{endTime}
+                and DATE_FORMAT(end_time, '%Y-%m-%d') <![CDATA[<=]]> #{endTime}
             </if>
         </where>
     </select>
@@ -64,46 +74,134 @@
         SELECT count(id) as contractNum
         FROM tb_clue
         where
-            status in
+        status in
         <foreach item="status" collection="customerIdList" separator="," open="(" close=")" index="">
             #{status, jdbcType=INTEGER}
         </foreach>
-            <if test="startTime ！= null and startTime !=''">
-                and create_time <![CDATA[>=]]> #{startTime}
-            </if>
-            <if test="endtime ！= null and endtime !=''">
-                and end_time <![CDATA[<=]]> #{endtime}
-            </if>
+        <if test="startTime ！= null and startTime !=''">
+            and create_time <![CDATA[>=]]> #{startTime}
+        </if>
+        <if test="endtime ！= null and endtime !=''">
+            and end_time <![CDATA[<=]]> #{endtime}
+        </if>
     </select>
     <select id="getTofollowedCluesNum" resultType="java.lang.Integer">
-        SELECT COUNT(DISTINCT (id)) AS TofollowedCluesNum
-        FROM `tb_clue`
-        WHERE DATE_FORMAT(`create_time`, '%Y-%m-%d') BETWEEN #{startTime}
-            AND #{endTime}
-          AND `status` =1
+        SELECT COUNT(DISTINCT(tc.id)) AS TofollowedCluesNum
+        FROM tb_clue tc
+                 left join tb_assign_record tar on tc.id = tar.assign_id
+        where DATE_FORMAT(tar.create_time, '%Y-%m-%d') BETWEEN #{startTime}
+            AND #{endTime} and  tc.status = 1
+          and tar.type = 0
+          and tar.latest = 1;
+
     </select>
     <select id="getTofollowedBusinessNum" resultType="java.lang.Integer">
         SELECT COUNT(DISTINCT (id)) AS tofollowedBusinessNum
         FROM `tb_business`
         WHERE DATE_FORMAT(`create_time`, '%Y-%m-%d') BETWEEN #{startTime}
             AND #{endTime}
-          AND `status` in ('1','3','4')
+          AND `status` in ('1', '3', '4')
     </select>
     <select id="getToallocatedCluesNum" resultType="java.lang.Integer">
-        SELECT COUNT(id) AS toallocatedCluesNum FROM tb_clue
-WHERE id in (Select DISTINCT (assign_id) FROM tb_assign_record)
+        SELECT COUNT(id) AS toallocatedCluesNum
+        FROM tb_clue
+        WHERE id not in (Select DISTINCT (assign_id) FROM tb_assign_record)
     </select>
     <select id="getToallocatedBusinessNum" resultType="java.lang.Integer">
         SELECT COUNT(DISTINCT (id)) AS tofollowedBusinessNum
         FROM `tb_business`
         WHERE DATE_FORMAT(`create_time`, '%Y-%m-%d') BETWEEN #{startTime}
             AND #{endTime}
-          AND `status` in ('3','4')
+          AND `status` in ('3', '4')
     </select>
     <select id="getsubjectStatistics" resultType="com.huike.report.domain.vo.SubjectStatisticsVO">
-        SELECT subject,COUNT(id) AS num FROM tb_contract
-WHERE status = 4 AND DATE_FORMAT(`create_time`, '%Y-%m-%d') BETWEEN #{startTime}
-    AND #{endTime} GROUP BY subject;
+        SELECT subject, COUNT(id) AS num
+        FROM tb_contract
+        WHERE status = 4
+          AND DATE_FORMAT(`create_time`, '%Y-%m-%d') BETWEEN #{startTime}
+            AND #{endTime}
+        GROUP BY subject;
+    </select>
+    <select id="getToadyClueNum" resultType="java.lang.String">
+        select count(id) FROM tb_clue where DATE_FORMAT(`create_time`, '%Y-%m-%d') in
+        <foreach item="date" collection="dates" separator="," open="(" close=")" index="">
+            #{date}
+        </foreach>
+        GROUP BY create_time
+    </select>
+    <select id="contractClue" resultType="java.util.Map">
+        SELECT count(1) as num,DATE_FORMAT(create_time,'%Y-%m-%d') dd from tb_clue
+        <where>
+            <if test="beginCreateTime != null and beginCreateTime != ''"><!-- 开始创建时间 -->
+                and date_format(create_time,'%y-%m-%d') &gt;= date_format(#{beginCreateTime},'%y-%m-%d')
+            </if>
+            <if test="endCreateTime != null and endCreateTime != ''"><!--  -->
+                and date_format(create_time,'%y-%m-%d') &lt;= date_format(#{endCreateTime},'%y-%m-%d')
+            </if>
+        </where>
+        GROUP BY dd;
+    </select>
+    <select id="getCluesNums" resultType="java.lang.Integer">
+        SELECT COUNT(DISTINCT id) AS cluesNums
+        FROM `tb_clue`
+        WHERE DATE_FORMAT(`create_time`, '%Y-%m-%d') BETWEEN #{startTime}
+                  AND #{endTime}
+    </select>
+    <select id="geteffectCluesNums" resultType="java.lang.Integer">
+        SELECT COUNT(DISTINCT id) AS cluesNums
+        FROM `tb_clue`
+        WHERE status in ('1', '3', '6', '7')
+          AND DATE_FORMAT(`create_time`, '%Y-%m-%d') BETWEEN #{startTime}
+            AND #{endTime}
+    </select>
+    <select id="getBusinessNums" resultType="java.lang.Integer">
+        SELECT COUNT(DISTINCT id)
+        FROM tb_business
+        WHERE clue_id in (SELECT id AS cluesNums
+                          FROM `tb_clue`
+                          WHERE status in ('1', '3', '6', '7')
+                            and DATE_FORMAT(`create_time`, '%Y-%m-%d') BETWEEN #{startTime}
+                              AND #{endTime})
+          and status in (1, 2)
+    </select>
+    <select id="getContractNums" resultType="java.lang.Integer">
+        SELECT COUNT(DISTINCT id)
+        FROM tb_contract
+        WHERE business_id in (SELECT id
+                              FROM tb_business
+                              WHERE clue_id in (SELECT id AS cluesNums
+                                                FROM `tb_clue`
+                                                WHERE status in ('1', '3', '6', '7')
+                                                  and DATE_FORMAT(`create_time`, '%Y-%m-%d') BETWEEN #{startTime}
+                                                    AND #{endTime})
+                                and status in (1, 2))
+    </select>
+    <select id="getbusinessChangeStatistics"
+            resultMap="getStudentRM">
+        select create_by, dept_name, num, FORMAT(num / sumnum, 2) radio
+        FROM (select c.create_by, d.dept_name, count(DISTINCT (c.id)) as num
+              FROM tb_contract c
+                       left join sys_dept d ON c.dept_id = d.dept_id
+              GROUP BY c.create_by
+              ORDER BY count(DISTINCT (c.id)) DESC limit 10) a,
+             (select COUNT(id) sumnum
+              FROM tb_business
+              WHERE DATE_FORMAT(create_time, '%Y-%m-%d') BETWEEN #{startTime}
+                        AND #{endTime}) b
+    </select>
+    <select id="getsalesStatistic" resultMap="getSalesStatisticsRM">
+        select tb.create_by, dept_name, COUNT(tc.id) num, FORMAT(COUNT(tc.id) / allnum, 2) radio
+        FROM tb_clue tc
+                 left join tb_business tb on tc.id = tb.clue_id
+                 left join tb_assign_record tar on tb.id = tar.assign_id
+                 left join sys_dept sd on sd.dept_id = tar.dept_id
+                 left join sys_user su on su.user_id = tar.user_id
+           , (select count(tb_clue.id) allnum FROM tb_clue) numc
+        WHERE tc.status = 6
+        group by tc.create_by
+                     and DATE_FORMAT(tc.create_time, '%Y-%m-%d') BETWEEN #{startTime}
+                     AND #{endTime}
+        order by num DESC
     </select>
 
 

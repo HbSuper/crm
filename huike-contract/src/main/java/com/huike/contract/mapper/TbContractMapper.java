@@ -58,8 +58,8 @@ public interface TbContractMapper {
 
     /**
      * 合同统计
-     * @param beginCreateTime
-     * @param endCreateTime
+     * @param beginCreateTime 开始时间
+     * @param endCreateTime 结束时间
      * @return
      */
     public List<Map<String,Object>> contractStatistics(@Param("beginCreateTime") String beginCreateTime, @Param("endCreateTime") String endCreateTime);

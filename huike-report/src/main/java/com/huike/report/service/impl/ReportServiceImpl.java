@@ -406,13 +406,23 @@ public class ReportServiceImpl implements IReportService {
 
     /**
      * 线索转化率漏斗图
-     *
      * @param beginCreateTime 开始时间
-     * @param
+     * @param endCreateTime 结束时间
      * @return
      */
     public VulnerabilityMapVo getVulnerabilityMap(String beginCreateTime, String endCreateTime) {
-        return null;
+        VulnerabilityMapVo vulnerabilityMapVo = new VulnerabilityMapVo();
+        // 线索数量
+        Integer cluesNums = reportMpper.getCluesNums(beginCreateTime, endCreateTime);
+        Integer effectCluesNums = reportMpper.geteffectCluesNums(beginCreateTime, endCreateTime);
+        Integer businessNums = reportMpper.getBusinessNums(beginCreateTime, endCreateTime);
+        Integer contractNums = reportMpper.getContractNums(beginCreateTime, endCreateTime);
+
+        vulnerabilityMapVo.setCluesNums(cluesNums);
+        vulnerabilityMapVo.setBusinessNums(businessNums);
+        vulnerabilityMapVo.setEffectiveCluesNums(effectCluesNums);
+        vulnerabilityMapVo.setContractNums(contractNums);
+        return vulnerabilityMapVo;
     }
 
     /**
@@ -423,7 +433,7 @@ public class ReportServiceImpl implements IReportService {
     public IndexTodoInfoVO getTodoInfo(String beginCreateTime, String endCreateTime) {
         Integer tofollowedCluesNum = reportMpper.getTofollowedCluesNum(beginCreateTime, endCreateTime);
         Integer tofollowedBusinessNum = reportMpper.getTofollowedBusinessNum(beginCreateTime, endCreateTime);
-        Integer toallocatedCluesNum = reportMpper.getToallocatedCluesNum(beginCreateTime, endCreateTime);
+        Integer toallocatedCluesNum = reportMpper.getToallocatedCluesNum(beginCreateTime, endCreateTime);//待分配
         Integer toallocatedBusinessNum = reportMpper.getToallocatedBusinessNum(beginCreateTime, endCreateTime);
 
         IndexTodoInfoVO indexTodoInfoVO = new IndexTodoInfoVO();
@@ -446,4 +456,63 @@ public class ReportServiceImpl implements IReportService {
 
     }
 
+    /**
+     * 新增线索数量折线图
+     * @param beginCreateTime 开始时间
+     * @param endCreateTime 结束时间
+     * @return
+     */
+    public  LineChartVO getcluesStatistics(String beginCreateTime, String endCreateTime) throws ParseException {
+        LineChartVO lineChartVO = new LineChartVO();
+        try {
+        List<String> timeList = findDates(beginCreateTime, endCreateTime);
+        lineChartVO.setxAxis(timeList);
+        List<LineSeriesVO> series = new ArrayList<>();
+        List<Map<String, Object>> statistics = reportMpper.contractClue(beginCreateTime, endCreateTime);
+        LineSeriesVO lineSeriesVO = new LineSeriesVO();
+        lineSeriesVO.setName("新增线索数量");
+        LineSeriesVO lineSeriesVO2 = new LineSeriesVO();
+        lineSeriesVO2.setName("线索总数量");
+        int sum = 0;
+        for (String s : timeList) {
+            Optional optional = statistics.stream().filter(d -> d.get("dd").equals(s)).findFirst();
+            if (optional.isPresent()) {
+                Map<String, Object> cuurentData = (Map<String, Object>) optional.get();
+                lineSeriesVO.getData().add(cuurentData.get("num"));
+                sum += Integer.parseInt(cuurentData.get("num").toString());
+            } else {
+                lineSeriesVO.getData().add(0);
+            }
+            lineSeriesVO2.getData().add(sum);
+        }
+        series.add(lineSeriesVO);
+        series.add(lineSeriesVO2);
+        lineChartVO.setSeries(series);
+        } catch (ParseException e) {
+            // e.printStackTrace();
+        }
+        return lineChartVO;
+}
+
+    /**
+     * 商机转化龙虎榜
+     * @param beginCreateTime 开始时间
+     * @param endCreateTime 结束时间
+     * @return
+     */
+   public List<BusinessChangeStatisticsVO> getbusinessChangeStatistics(String beginCreateTime, String endCreateTime) {
+       List<BusinessChangeStatisticsVO> businessChangeStatisticsVOS1 = reportMpper.getbusinessChangeStatistics(beginCreateTime, endCreateTime);
+       return businessChangeStatisticsVOS1;
+      }
+
+    /**
+     * 线索转化龙虎榜
+     * @param beginCreateTime 开始时间
+     * @param endCreateTime 结束时间
+     * @return
+     */
+    public List<SalesStatisticsVO> getsalesStatistic(String beginCreateTime, String endCreateTime){
+
+        return   reportMpper.getsalesStatistic(beginCreateTime,endCreateTime);
+    }
 }

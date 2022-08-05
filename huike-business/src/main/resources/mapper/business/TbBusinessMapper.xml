@@ -34,7 +34,7 @@
         <result property="otherIntention"    column="other_intention"    />
         <result property="nextTime"    column="next_time"    />
         <result property="status"    column="status"    />
-        <result property="clue_id"    column="clueId"    />
+        <result property="clueId"    column="clue_id"    />
     </resultMap>
 
     <resultMap type="TbBusiness" id="TbBusinessAssignResult">
@@ -69,7 +69,7 @@
         <result property="assignBy"    column="assign_by"    />
         <result property="owner"    column="owner"    />
         <result property="ownerTime"    column="owner_time"    />
-        <result property="clue_id"    column="clueId"    />
+        <result property="clueId"    column="clue_id"    />
     </resultMap>
 
 

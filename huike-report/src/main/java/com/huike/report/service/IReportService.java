@@ -1,11 +1,10 @@
 package com.huike.report.service;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
-import com.huike.common.core.domain.AjaxResult;
 import com.huike.report.domain.vo.*;
-import org.apache.ibatis.annotations.Param;
 
 import com.huike.clues.domain.TbActivity;
 import com.huike.clues.domain.TbClue;
@@ -136,4 +135,27 @@ public interface IReportService {
      * @return
      */
     List<SubjectStatisticsVO> getsubjectStatistics(String beginCreateTime, String endCreateTime);
+
+    /**
+     * 新增线索数量折线图
+     * @param beginCreateTime 开始时间
+     * @param endCreateTime 结束时间
+     * @return
+     */
+    LineChartVO getcluesStatistics(String beginCreateTime, String endCreateTime) throws ParseException;
+
+    /**
+     * 商机转化龙虎榜
+     * @param beginCreateTime 开始时间
+     * @param endCreateTime 结束时间
+     * @return
+     */
+    List<BusinessChangeStatisticsVO> getbusinessChangeStatistics(String beginCreateTime, String endCreateTime);
+    /**
+     * 线索转化龙虎榜
+     * @param beginCreateTime 开始时间
+     * @param endCreateTime 结束时间
+     * @return
+     */
+    List<SalesStatisticsVO> getsalesStatistic(String beginCreateTime, String endCreateTime);
 }

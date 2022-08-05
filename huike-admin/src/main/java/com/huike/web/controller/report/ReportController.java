@@ -1,5 +1,6 @@
 package com.huike.web.controller.report;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -159,10 +160,10 @@ public class ReportController extends BaseController {
      * @param endCreateTime 结束时间
      * @return
      */
-    @GetMapping("/getVulnerabilityMap/{beginCreateTime}/{endTime}")
+    @GetMapping("/getVulnerabilityMap/{beginCreateTime}/{endCreateTime}")
     public AjaxResult getVulnerabilityMap(@PathVariable("beginCreateTime") String beginCreateTime,
-                                    @PathVariable("endTime") String endTime) {
-        return AjaxResult.success(reportService.getVulnerabilityMap(beginCreateTime,endTime));
+                                    @PathVariable("endCreateTime") String endCreateTime) {
+        return AjaxResult.success(reportService.getVulnerabilityMap(beginCreateTime,endCreateTime));
     }
 
     /**
@@ -176,4 +177,16 @@ public class ReportController extends BaseController {
                                         @PathVariable("endCreateTime") String endCreateTime){
         return AjaxResult.success(reportService.getsubjectStatistics(beginCreateTime,endCreateTime));
     }
-}
+
+    /**
+     * 新增线索数量折线图
+     * @param beginCreateTime 开始时间
+     * @param endCreateTime 结束时间
+     * @return
+     */
+    @GetMapping("/cluesStatistics/{beginCreateTime}/{endCreateTime}")
+    public LineChartVO cluesStatistics(@PathVariable("beginCreateTime") String beginCreateTime,
+                                        @PathVariable("endCreateTime") String endCreateTime) throws ParseException {
+        return reportService.getcluesStatistics(beginCreateTime,endCreateTime);
+
+}}

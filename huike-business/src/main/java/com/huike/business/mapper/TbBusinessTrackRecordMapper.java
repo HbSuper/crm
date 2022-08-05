@@ -8,5 +8,12 @@ import com.huike.business.domain.TbBusinessTrackRecord;
  * @date 2021-04-28
  */
 public interface TbBusinessTrackRecordMapper {
-
+    /**
+     * 新增商机跟进记录
+     */
+    Integer insertTbBusinessTrackRecord(TbBusinessTrackRecord tbBusinessTrackRecord);
+    /**
+     * 查询商机跟进记录列表
+     */
+    List<TbBusinessTrackRecord> selectTbBusinessTrackRecord(Long id);
 }

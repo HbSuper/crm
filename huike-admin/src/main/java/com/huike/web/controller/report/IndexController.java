@@ -50,4 +50,27 @@ public class IndexController {
         return AjaxResult.success(reportService.getTodoInfo(beginCreateTime,endCreateTime));
     }
 
+    /**
+     * 首页--商机转化龙虎榜接口
+     * @param beginCreateTime
+     * @param endCreateTime
+     * @return
+     */
+    @GetMapping("/businessChangeStatistics")
+    public AjaxResult  getbusinessChangeStatistics(@RequestParam("beginCreateTime")String beginCreateTime,@RequestParam("endCreateTime") String endCreateTime) {
+        return AjaxResult.success(reportService.getbusinessChangeStatistics(beginCreateTime,endCreateTime));
+
+    }
+    /**
+     * 首页--线索转化龙虎榜接口
+     * @param beginCreateTime 开始时间
+     * @param endCreateTime 结束时间
+     * @return
+     */
+    @GetMapping("/salesStatistic")
+    public AjaxResult  getsalesStatistic(@RequestParam("beginCreateTime")String beginCreateTime,@RequestParam("endCreateTime") String endCreateTime) {
+        return AjaxResult.success(reportService.getsalesStatistic(beginCreateTime,endCreateTime));
+
+    }
+
 }
