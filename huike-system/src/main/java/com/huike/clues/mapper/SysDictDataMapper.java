@@ -94,4 +94,11 @@ public interface SysDictDataMapper{
      * @return 结果
      */
     public int updateDictDataType(@Param("oldDictType") String oldDictType, @Param("newDictType") String newDictType);
+
+    /**
+     * 通过标签获取键值
+     * @param subject
+     * @return
+     */
+    String selectDictValueBylabel(String subject);
 }

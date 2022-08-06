@@ -1,6 +1,7 @@
 package com.huike.clues.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.huike.common.annotation.Excel;
@@ -12,6 +13,7 @@ import java.util.Date;
  * 线索跟进记录对象 tb_clue_track_record
  * @date 2021-04-19
  */
+@Data
 public class TbClueTrackRecord extends BaseEntity
 {
     private static final long serialVersionUID = 1L;

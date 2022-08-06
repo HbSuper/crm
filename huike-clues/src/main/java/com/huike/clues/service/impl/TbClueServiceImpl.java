@@ -8,7 +8,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.huike.clues.domain.dto.ImportResultDTO;
+import com.huike.clues.service.*;
 import com.huike.clues.strategy.Rule;
+import com.huike.common.utils.ServletUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,9 +27,6 @@ import com.huike.clues.mapper.SysUserMapper;
 import com.huike.clues.mapper.TbActivityMapper;
 import com.huike.clues.mapper.TbAssignRecordMapper;
 import com.huike.clues.mapper.TbClueMapper;
-import com.huike.clues.service.ITbActivityService;
-import com.huike.clues.service.ITbClueService;
-import com.huike.clues.service.ITbRulePoolService;
 import com.huike.clues.utils.HuiKeCrmDateUtils;
 import com.huike.clues.utils.JobUtils;
 import com.huike.common.annotation.DataScope;
@@ -74,6 +73,13 @@ public class TbClueServiceImpl implements ITbClueService {
 
     @Autowired
     private ITbClueService tbClueService;
+    @Autowired
+    private ITbActivityService tbActivityService;
+    @Autowired
+    private ISysDictTypeService iSysDictTypeService;
+
+    @Autowired
+    private ISysDictDataService sysDictDataService;
 
     /**
      * 查询线索管理
@@ -396,6 +402,7 @@ public class TbClueServiceImpl implements ITbClueService {
         }
     }
 
+
     /**
      * 线索数据添加入库
      *
@@ -410,35 +417,69 @@ public class TbClueServiceImpl implements ITbClueService {
          * 1.1 如果活动编号不存在 即错误数据，不进行添加操作，返回错误 ImportResultDTO.error()
          * 1.2 如果活动编号存在 设置活动id
          */
+        TbClue tbClue = new TbClue();
+
+        TbActivity tbActivity = tbActivityService.selectTbActivityByCode(data.getActivityCode());
+        if (tbActivity == null) {
+            return ImportResultDTO.error();
+        }
+        tbClue.setActivityId(tbActivity.getId());
+
+
         // TODO 补全上述逻辑代码
         /**
          * 校验手机号和渠道是否为空
          * 如果为空证明是错误数据，不进行添加 返回error
          * return ImportResultDTO.error();
          */
+        String phone = data.getPhone();
+        String channel = data.getChannel();
+        if (StringUtils.isEmpty(phone) || StringUtils.isEmpty(channel)) {
+            return ImportResultDTO.error();
+        }
+        String channel1 = sysDictDataService.selectDictValueBylabel(channel);
+
+        tbClue.setPhone(phone);
+        tbClue.setChannel(channel1);
         // TODO 补全上述逻辑代码
         /**
          * 字典值的替换
          * 因为excel里传入的是中文名，需要替换成对应的字典值
          * 需要处理 学科 性别 意向级别
          */
+        String subject = data.getSubject();
+        String sex = data.getSex();
+        String level = data.getLevel();
+        // 中文名->字典值 中文名->sys_dict_data-sys_label ?  ->sys_value
+        String subjectValue = sysDictDataService.selectDictValueBylabel(subject);
+        String sexValue = sysDictDataService.selectDictValueBylabel(sex);
+        String levelValue = sysDictDataService.selectDictValueBylabel(level);
+        tbClue.setSubject(subjectValue);
+        tbClue.setSex(sexValue);
+        tbClue.setLevel(levelValue);
         // TODO 补全上述逻辑代码
         /**
          * 设置数据状态为待跟进
          * clue.setStatus(TbClue.StatusType.UNFOLLOWED.getValue());
          */
+        tbClue.setStatus(TbClue.StatusType.UNFOLLOWED.getValue());
         // TODO 补全上述逻辑代码
         /**
          * 将线索数据入库
          * 参考添加线索接口调用的mapper
          * 仅仅只插入到线索表中
          */
+        Date date = DateUtils.parseDate(DateUtils.YYYY_MM_DD);
+        tbClue.setCreateTime(date);
+        tbClue.setCreateBy(SecurityUtils.getUsername());
+        tbClueMapper.insertTbClue(tbClue);
         // TODO 补全上述逻辑代码
         /**
          * 根据规则动态分配线索给具体的销售人员
          * 利用策略模式来进行实现
          * rule.loadRule(clue);
          */
+        Boolean aBoolean = rule.loadRule(tbClue);
         // TODO 补全上述逻辑代码
 
         /**
@@ -449,11 +490,6 @@ public class TbClueServiceImpl implements ITbClueService {
 
     }
 
-    /**
-     * 新增线索跟进
-     *
-     * @param tbClueTrackRecord 线索跟进对象
-     * @return
-     */
+
 
 }

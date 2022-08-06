@@ -225,8 +225,8 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null">#{name},</if>
-            <if test="phone != null and phone != ''">#{phone},</if>
-            <if test="channel != null and channel != ''">#{channel},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="channel != null">#{channel},</if>
             <if test="activityId != null">#{activityId},</if>
             <if test="sex != null">#{sex},</if>
             <if test="age != null">#{age},</if>

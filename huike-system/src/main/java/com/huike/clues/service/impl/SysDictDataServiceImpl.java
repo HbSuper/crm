@@ -106,4 +106,15 @@ public class SysDictDataServiceImpl implements ISysDictDataService
         }
         return row;
     }
+
+    /**
+     * 通过标签查找键值
+     * @param subject
+     * @return
+     */
+    @Override
+    public String selectDictValueBylabel(String subject) {
+        return dictDataMapper.selectDictValueBylabel(subject);
+    }
+
 }

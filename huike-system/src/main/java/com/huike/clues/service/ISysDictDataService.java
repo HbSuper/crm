@@ -58,4 +58,11 @@ public interface ISysDictDataService
      * @return 结果
      */
     public int updateDictData(SysDictData dictData);
+
+    /**
+     * 通过标签查找键值
+     * @param subject
+     * @return
+     */
+    String selectDictValueBylabel(String subject);
 }

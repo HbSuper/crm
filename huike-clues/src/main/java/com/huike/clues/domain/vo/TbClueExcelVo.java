@@ -1,7 +1,9 @@
 package com.huike.clues.domain.vo;
 
 import com.alibaba.excel.annotation.ExcelProperty;
+import lombok.Data;
 
+@Data
 public class TbClueExcelVo{
 
 
